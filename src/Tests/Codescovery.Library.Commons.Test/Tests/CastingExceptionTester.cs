@@ -72,8 +72,8 @@ namespace Codescovery.Library.Commons.Test.Tests
             var expectedMessageResult = messageBuilder.AppendLine(exception.StackTrace).ToString();
             Assert.AreEqual(expectedMessageResult, message);
         }
-        public CastingException GetThrowedCastingException(MemberInfo fromType, MemberInfo toType, string aditionalMessage = null,
-            Exception innerException = null, bool includeStackTrace = true)
+        public CastingException GetThrowedCastingException(MemberInfo fromType, MemberInfo toType, string? aditionalMessage = null,
+            Exception? innerException = null, bool includeStackTrace = true)
         {
             try
             {

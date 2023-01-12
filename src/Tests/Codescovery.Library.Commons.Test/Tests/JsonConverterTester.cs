@@ -1,5 +1,9 @@
 ﻿using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Text.Json;
+using Codescovery.Library.Commons.Extensions;
 using Codescovery.Library.Commons.Test.Context;
+using Codescovery.Library.Commons.Test.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,7 +12,7 @@ namespace Codescovery.Library.Commons.Test.Tests
     [TestClass]
     public class JsonConverterTester
     {
-        private readonly DependencyInjectionContext _dependencyInjectionContext = new ();
+        private readonly DependencyInjectionContext _dependencyInjectionContext = new();
         [TestInitialize]
         public void Initialize()
         {
@@ -18,17 +22,25 @@ namespace Codescovery.Library.Commons.Test.Tests
             ConfigureServices(_dependencyInjectionContext.Services, _dependencyInjectionContext.Configuration);
         }
 
-        protected  void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        protected void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            
+
         }
 
         [TestMethod]
         public void Serialize()
         {
+            var exampleClass = new ClonableExampleClass
+            {
+                ExampleInt = 1
+            };
+            exampleClass
+                .With(opt => opt.ExampleInt).Set(2)
+                .With(opt => opt.ExampleString).Set("test");
+            var json = JsonSerializer.Serialize(exampleClass);
             //var jsonConverter = _dependencyInjectionContext.Resolve<IJsonConverter>();
             //var result = jsonConverter.Serialize(new { Test = "Test" });
-            Assert.AreEqual(true,true);
+            Assert.AreEqual(true, true);
         }
     }
 }

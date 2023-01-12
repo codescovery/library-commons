@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace Codescovery.Library.Commons.Extensions
 {
@@ -18,11 +16,17 @@ namespace Codescovery.Library.Commons.Extensions
             var result = Activator.CreateInstance<T>();
 
             do
-                foreach (var field in type.GetFields(bindingFlags))
-                    field.SetValue(result, field.GetValue(source));
-            while ((type = type.BaseType) != typeof(object));
+                if (type != null)
+                    Clone(source, bindingFlags, type, result);
+            while (type != null && (type = type.BaseType) != typeof(object));
 
             return result;
+        }
+
+        public static void Clone<T>(this T source, BindingFlags bindingFlags, Type type, T result) where T : new()
+        {
+            foreach (var field in type.GetFields(bindingFlags))
+                field.SetValue(result, field.GetValue(source));
         }
     }
 }
