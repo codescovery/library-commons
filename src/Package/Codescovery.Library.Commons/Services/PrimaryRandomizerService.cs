@@ -157,7 +157,7 @@ namespace Codescovery.Library.Commons.Services
         {
             var random = randomIstance ?? Random;
             if (GetRandomBoolean(random))
-                return null;
+                return  Activator.CreateInstance(enumType);
             return GetRandomEnum(enumType, random);
         }
 

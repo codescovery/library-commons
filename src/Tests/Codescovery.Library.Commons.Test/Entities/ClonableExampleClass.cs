@@ -2,16 +2,14 @@
 
 namespace Codescovery.Library.Commons.Test.Entities
 {
-internal class ClonableExampleClass
-{
-    public ClonableExampleClass()
+    public sealed class ClonableExampleClass
     {
-        
+
+
+        public string? ExampleString { get; set; } = default;
+        public int ExampleInt { get; set; } = default;
+        public ExampleEnum ExampleEnum { get; set; } = default;
+        public ClonableExampleClass ExampleNestedClass { get; set; }
+        public List<ClonableExampleClass> ExampleList { get; set; }
     }
-    public string ExampleString { get; set; }
-    public int ExampleInt { get; set; }
-    public ExampleEnum ExampleEnum { get; set; }
-    public ClonableExampleClass ExampleNestedClass { get; set; }
-    public List<ClonableExampleClass> ExampleList { get; set; }
-}
 }

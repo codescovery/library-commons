@@ -6,7 +6,10 @@ using Codescovery.Library.Commons.Interfaces;
 using Codescovery.Library.Commons.Interfaces.Mock;
 using Codescovery.Library.Commons.Interfaces.Random;
 using System.Data;
+using System.Linq;
 using System.Reflection;
+using System.Collections;
+using Codescovery.Library.Commons.Extensions;
 
 namespace Codescovery.Library.Commons.Services
 {
@@ -36,112 +39,106 @@ namespace Codescovery.Library.Commons.Services
             _randomizerService = randomizerService ?? RandomizerServiceBuilder.BuildDefault(_random, _primaryRandomizerService);
         }
 
-        public object Randomizer(Type type)
+        public object Randomize(Type type, int maxDepth = 1)
         {
-            var method = typeof(IDeepRandomizerService).GetMethod(nameof(IDeepRandomizerService.Randomize));
+            var method = typeof(IDeepRandomizerService).GetMethods()
+                .Where(m => m.Name == nameof(IDeepRandomizerService.Randomize))
+                .FirstOrDefault(m => m.IsGenericMethod);
+
             if (method == null) return null;
 
             var genericMethod = method.MakeGenericMethod(type);
-            var result = genericMethod.Invoke(this, null);
+            var result = genericMethod.Invoke(this, new object[] { maxDepth });
             return result;
         }
-        public T Randomize<T>()
+        public T Randomize<T>(int maxDepth = 1)
         {
             var type = typeof(T);
-            if (type.IsValueType || type == typeof(string))
-                return HandleString<T>(type);
-            if (type.IsEnum)
+
+            if (type.IsPrimitiveType())
                 return (T)RandomizeType(type);
+            if (maxDepth <= 0) return default(T);
 
             if (type.IsArray)
                 return HandleArray<T>(type);
 
 
             if (type.IsGenericType)
-                if (HandleGenericType(type, out T resultList)) return resultList;
-            
+                if (HandleGenericType(type, out T resultList, maxDepth)) return resultList;
+
 
             var obj = Activator.CreateInstance<T>();
-            if (IsObject(obj))
-                PropertySetter(type, obj);
+            if (obj.IsObject())
+                PropertySetter(type, obj, maxDepth);
             else
-                AddValuesToEnumerable(obj);
+                AddValuesToEnumerable(obj, maxDepth - 1);
 
 
             return obj;
         }
 
-        private T HandleString<T>(Type type)
-        {
-            return (T)_randomizerService.RandomizeValueType(type, _random);
-        }
 
-        private T HandleArray<T>(Type type)
+        public T HandleArray<T>(Type type, int maxDepth = 1)
         {
             var elementType = type.GetElementType();
-            var array = Array.CreateInstance(elementType, _random.Next(1, 4));
+            var array = Array.CreateInstance(elementType ?? throw new NullReferenceException(nameof(type)), _random.Next(1, maxDepth));
             for (var i = 0; i < array.Length; i++)
-            {
-                array.SetValue(RandomizeType(elementType), i);
-            }
+                array.SetValue(RandomizeType(elementType, maxDepth), i);
+
 
             return (T)(object)array;
         }
 
-        private bool HandleGenericType<T>(Type type, out T resultList)
+        public bool HandleGenericType<T>(Type type, out T resultList, int maxDepth = 1)
         {
             resultList = default;
             var genericTypeDefinition = type.GetGenericTypeDefinition();
             if (genericTypeDefinition != typeof(List<>)) return false;
             var elementType = type.GetGenericArguments()[0];
-            var list = (IList<object>)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
-            var count = _random.Next(1, 4);
-            for (var i = 0; i < count; i++)
-                
-                list.Add(RandomizeType(elementType));
+            var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+            if (maxDepth > 0)
+                for (var i = 1; i < maxDepth; i++)
+                    list.Add(Randomize(elementType, maxDepth));
 
-             
+
             resultList = (T)list;
             return true;
 
         }
 
-        private void AddValuesToEnumerable<T>(T obj)
+        public void AddValuesToEnumerable<T>(T obj, int maxDepth = 1)
         {
             var count = _random.Next(1, 4);
             var addMethod = obj.GetType().GetMethod("Add");
-            for (var i = 0; i < count; i++) HandleAdd(obj, addMethod);
+            for (var i = 0; i < count; i++) HandleAdd(obj, addMethod, maxDepth);
         }
 
-        private void HandleAdd<T>(T obj, MethodInfo addMethod)
+        public void HandleAdd<T>(T obj, MethodInfo addMethod, int maxDepth = 1)
         {
-            if (addMethod != null)
-                addMethod.Invoke(obj, new[] {RandomizeType(obj.GetType().GetGenericArguments()[0])});
+            if (addMethod == null) return;
+            addMethod.Invoke(obj, new[] { RandomizeType(obj.GetType().GetGenericArguments()[0], maxDepth) });
         }
 
-        private static bool IsObject<T>(T obj)
-        {
-            return !(obj is System.Collections.IEnumerable) || obj is string;
-        }
 
-        private void PropertySetter<TObjectType>(Type type, TObjectType obj)
+
+        public void PropertySetter(Type type, object obj, int maxDepth = 1)
         {
             var properties = type.GetProperties();
             foreach (var property in properties)
             {
                 if (!property.CanWrite)
                     continue;
-                
 
-                property.SetValue(obj, Randomizer(property.PropertyType));
+
+                property.SetValue(obj, Randomize(property.PropertyType, maxDepth - 1));
             }
         }
 
-        private object RandomizeType(Type type)
+        public object RandomizeType(Type type, int maxDepth = 1)
         {
             if (!type.IsInterface) return _randomizerService.RandomizeValueType(type, _random, _randomStringOptions);
             var mocked = _mockedTypeGeneratorService.CreateMockedObject(type);
-            PropertySetter(mocked.GetType(), mocked);
+            PropertySetter(mocked.GetType(), mocked, maxDepth);
             return mocked;
         }
 

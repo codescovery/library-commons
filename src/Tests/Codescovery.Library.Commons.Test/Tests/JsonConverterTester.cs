@@ -34,9 +34,14 @@ namespace Codescovery.Library.Commons.Test.Tests
             {
                 ExampleInt = 1
             };
-            exampleClass
-                .With(opt => opt.ExampleInt).Set(2)
-                .With(opt => opt.ExampleString).Set("test");
+            exampleClass.With()
+                .Property(@class => @class.ExampleString)
+                .Set("test")
+                .With()
+                .Property(@class => @class.ExampleInt)
+                .Set(2)
+                ;
+                
             var json = JsonSerializer.Serialize(exampleClass);
             //var jsonConverter = _dependencyInjectionContext.Resolve<IJsonConverter>();
             //var result = jsonConverter.Serialize(new { Test = "Test" });

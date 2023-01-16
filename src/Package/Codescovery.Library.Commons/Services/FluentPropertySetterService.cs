@@ -1,20 +1,20 @@
-﻿using System.Linq.Expressions;
+﻿using Codescovery.Library.Commons.Interfaces.Fluent.Builder.Object;
+using System.Linq.Expressions;
 using System.Reflection;
 using System;
 
 namespace Codescovery.Library.Commons.Services
 {
-    public class FluentBuilder<T, TMember>
+    internal class FluentPropertySetterService<T,TMember>: IFluentPropertySetterService<T, TMember>
     {
         private readonly T _source;
         private readonly Expression<Func<T, TMember>> _field;
 
-        public FluentBuilder(T source, Expression<Func<T, TMember>> field)
+        public FluentPropertySetterService(T source, Expression<Func<T, TMember>> field)
         {
             _source = source;
             _field = field;
         }
-
         public T Set(TMember value)
         {
             var memberInfo = GetMemberInfo(_field);

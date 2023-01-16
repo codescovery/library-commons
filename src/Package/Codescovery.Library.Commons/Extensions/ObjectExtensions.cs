@@ -30,9 +30,13 @@ namespace Codescovery.Library.Commons.Extensions
             }
         }
 
-        public static FluentBuilder<T, TMember> With<T, TMember>(this T obj, Expression<Func<T, TMember>> field)
+        //public static IFluentPropertySetterService<> With<T, TMember>(this T obj, Expression<Func<T, TMember>> field)
+        //{
+        //    return new FluentBuilder<T, TMember>(obj, field);
+        //}
+        public static IFluentPropertySelectorService<T> With<T>(this T obj)
         {
-            return new FluentBuilder<T, TMember>(obj, field);
+            return new FluentPropertySelectorService<T>(obj);
         }
 
     }
