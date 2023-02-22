@@ -19,7 +19,7 @@ jobs:
       run: |
         Write-Host $Env:GITHUB_REF
         $version =  $Env:GITHUB_REF.replace('refs/heads/release/','')
-        $version >> $Env:GITHUB_ENV
+        BUILD_VERSION=$version >> $Env:GITHUB_ENV
         Write-Host $Env:BUILD_VERSION
       shell: pwsh
     - name: Setup NuGet
