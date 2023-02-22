@@ -2,7 +2,7 @@
 
 namespace Codescovery.Library.Commons.Entities.Configurations
 {
-    internal sealed class TimeSpanConfiguration : BaseTimeSpanConfiguration
+    public sealed class TimeSpanConfiguration : BaseTimeSpanConfiguration
     {
     }
 }

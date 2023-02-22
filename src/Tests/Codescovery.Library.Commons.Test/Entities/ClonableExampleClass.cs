@@ -1,8 +1,9 @@
-﻿using Codescovery.Library.Commons.Test.Enums;
+﻿using Codescovery.Library.Commons.Interfaces.Configuration;
+using Codescovery.Library.Commons.Test.Enums;
 
 namespace Codescovery.Library.Commons.Test.Entities
 {
-    public sealed class ClonableExampleClass
+    public class ClonableExampleClass
     {
 
 

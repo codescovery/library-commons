@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using Codescovery.Library.Commons.Entities.Base64;
 using Codescovery.Library.Commons.Entities.Options.Regex;
 using Codescovery.Library.Commons.Entities.Regex;
 using Codescovery.Library.Commons.Exceptions;
@@ -74,6 +75,16 @@ namespace Codescovery.Library.Commons.Extensions
             {
                 return new RegexValidationResultException(ex);
             }
+        }
+        public static Base64Encoded ToBase64Encoded(this string text, Base64FormattingOptions encodingOptions = Base64FormattingOptions.None)
+        {
+            return text.IsNullOrEmptyOrWhiteSpace() ? null : new Base64Encoded(text, encodingOptions);
+        }
+
+        public static Base64Decoded ToBase64Decoded(this string text)
+        {
+
+            return text.IsNullOrEmptyOrWhiteSpace() ? null : new Base64Decoded(text);
         }
     }
 }

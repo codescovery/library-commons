@@ -53,14 +53,36 @@ public class FluentObjectPropertySetterTester
         {
             ExampleInt = 1
         };
-        exampleClass.With()
+       exampleClass.With()
             .Property(@class => @class.ExampleInt)
             .Set(intValue)
-            .With()
+            .And()
             .Property(@class => @class.ExampleString)
             .Set(stringValue);
         Assert.AreEqual(exampleClass.ExampleInt, intValue);
         Assert.AreEqual(exampleClass.ExampleString, stringValue);
+
+    }
+    [TestMethod]
+    public void CloneWithChangeStringAndInt()
+    {
+        var randomizer = DeepRandomizerServiceBuilder.BuildDefault();
+        var intValue = randomizer.Randomize<int>();
+        var stringValue = Guid.NewGuid().ToString();
+        var exampleClass = new ClonableExampleClass
+        {
+            ExampleInt = 1
+        };
+       var cloned= exampleClass.CloneWith()
+            .Property(@class => @class.ExampleInt)
+            .Set(intValue)
+            .And()
+            .Property(@class => @class.ExampleString)
+            .Set(stringValue);
+        Assert.AreEqual(cloned.ExampleInt, intValue);
+        Assert.AreNotEqual(exampleClass.ExampleInt, intValue);
+        Assert.AreEqual(cloned.ExampleString, stringValue);
+        Assert.AreNotEqual(exampleClass.ExampleString, stringValue);
 
     }
 }

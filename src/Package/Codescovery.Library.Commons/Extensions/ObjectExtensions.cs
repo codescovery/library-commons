@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Text.Json;
 using Codescovery.Library.Commons.Exceptions;
 using Codescovery.Library.Commons.Interfaces.Fluent.Builder.Object;
 using Codescovery.Library.Commons.Services;
@@ -29,14 +30,19 @@ namespace Codescovery.Library.Commons.Extensions
                 return defaultValue;
             }
         }
-
-        //public static IFluentPropertySetterService<> With<T, TMember>(this T obj, Expression<Func<T, TMember>> field)
-        //{
-        //    return new FluentBuilder<T, TMember>(obj, field);
-        //}
-        public static IFluentPropertySelectorService<T> With<T>(this T obj)
+        public static IFluentPropertySelectorService<T> And<T>(this T obj)
         {
             return new FluentPropertySelectorService<T>(obj);
+        }
+        public static IFluentPropertySelectorService<T> With<T>(this T obj) 
+        {
+            
+            return new FluentPropertySelectorService<T>(obj);
+        }
+        public static IFluentPropertySelectorService<T> CloneWith<T>(this T obj) where T : new()
+        {
+
+            return new FluentPropertySelectorService<T>(obj.DeepClone());
         }
 
     }

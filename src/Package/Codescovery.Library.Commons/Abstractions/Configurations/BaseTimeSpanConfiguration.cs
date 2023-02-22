@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using Codescovery.Library.Commons.Interfaces;
+using Codescovery.Library.Commons.Interfaces.Configuration;
 
 namespace Codescovery.Library.Commons.Abstractions.Configurations
 {

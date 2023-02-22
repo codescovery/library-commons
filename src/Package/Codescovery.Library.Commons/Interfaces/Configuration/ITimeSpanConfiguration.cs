@@ -1,4 +1,5 @@
-﻿namespace Codescovery.Library.Commons.Interfaces
+﻿
+namespace Codescovery.Library.Commons.Interfaces.Configuration
 {
     public interface ITimeSpanConfiguration
     {

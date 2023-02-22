@@ -31,5 +31,13 @@ namespace Codescovery.Library.Commons.Test.Tests
 
             Assert.AreEqual(originalJson, clonedJson);
         }
+        [TestMethod]
+        public void NullDeepClone()
+        {
+            ClonableExampleClass? originalObject = null;
+            var clonedObject = originalObject.DeepClone();
+
+            Assert.AreEqual(clonedObject, default);
+        }
     }
 }
