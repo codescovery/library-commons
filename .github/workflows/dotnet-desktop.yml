@@ -35,11 +35,11 @@ jobs:
         dotnet-version: 7.x
 
     - name: Build
-      run: dotnet build ${{env.SOLUTION}} --configuration ${{env.BUILD_CONFIG}} -p:Version=${{env.BUILD_VERSION}} --no-restore
+      run: dotnet build ${{env.SOLUTION}} --configuration ${{env.BUILD_CONFIG}} -p:Version=${{env.BUILD_VERSION}} --no-restore -o ${{env.DOTNET_ROOT}}/drop
 
     - name: Run tests
       run: dotnet test ${{env.TEST_PROJECT}} /p:Configuration=${{env.BUILD_CONFIG}} --no-restore --no-build --verbosity normal
       
     - name: Publish
       if: startsWith(github.ref, 'refs/heads/release')
-      run: nuget push **\*.nupkg -Source 'https://nuget.pkg.github.com/NAMESPACE/index.json' -ApiKey ${{secrets.NUGET_API_KEY_GITHUB}}
+      run: nuget push ${{env.DOTNET_ROOT}}/drop/**/*.nupkg -Source 'https://nuget.pkg.github.com/NAMESPACE/index.json' -ApiKey ${{secrets.NUGET_API_KEY_GITHUB}}
