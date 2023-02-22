@@ -18,7 +18,7 @@ jobs:
     - name: Get Build Version
       run: |
         Write-Host $Env:GITHUB_REF
-        $version =  $Env:GITHUB_REF.replace('release/','')
+        $version =  $Env:GITHUB_REF.replace('refs/heads/release/','')
         echo "BUILD_VERSION=$version"
         Write-Host $Env:BUILD_VERSION
       shell: pwsh
