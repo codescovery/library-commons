@@ -38,7 +38,7 @@ jobs:
       run: dotnet build ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} -p:Version=${{env.BUILD_VERSION}} --no-restore -o ${{env.DOTNET_ROOT}}/artifact
 
     - name: Run tests
-      run: dotnet test ${{env.TEST_PROJECT_PATH}} /p:Configuration=${{env.BUILD_CONFIG}} --no-restore --no-build --verbosity normal
+      run: dotnet test ${{env.TEST_PROJECT_PATH}} /p:Configuration=${{env.BUILD_CONFIG}} --no-restore --no-build --verbosity detailed
       
     - name: Publish
       if: startsWith(github.ref, 'refs/heads/release')

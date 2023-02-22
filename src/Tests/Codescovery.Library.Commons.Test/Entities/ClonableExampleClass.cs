@@ -10,7 +10,7 @@ namespace Codescovery.Library.Commons.Test.Entities
         public string? ExampleString { get; set; } = default;
         public int ExampleInt { get; set; } = default;
         public ExampleEnum ExampleEnum { get; set; } = default;
-        public ClonableExampleClass ExampleNestedClass { get; set; }
-        public List<ClonableExampleClass> ExampleList { get; set; }
+        public ClonableExampleClass? ExampleNestedClass { get; set; }
+        public List<ClonableExampleClass>? ExampleList { get; set; }
     }
 }
