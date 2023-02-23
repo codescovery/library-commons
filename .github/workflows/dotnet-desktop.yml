@@ -15,7 +15,7 @@ jobs:
       NUGET_SOURCE: 'https://nuget.pkg.github.com/NAMESPACE/index.json'
     strategy:
       matrix:
-        dotnet: [ 'netstandard2.0', 'netstandard2.1', '6.0.x','7.0.x' ]
+        dotnet: [ '6.0.x','7.0.x' ]
     runs-on: ubuntu-latest
 
     steps:
