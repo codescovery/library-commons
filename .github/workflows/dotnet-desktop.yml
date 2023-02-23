@@ -4,6 +4,8 @@ on:
   create:
     branches:
       - release/**
+      - main
+      - development
   push:
     paths-ignore:
       - 'docs/**'
@@ -25,38 +27,124 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Get Build Version
-      run: |
-        Write-Host $Env:GITHUB_REF
-        $version =  $Env:GITHUB_REF.replace('refs/heads/release/','')
-        echo "BUILD_VERSION=$version" >> $Env:GITHUB_ENV
-        Write-Host $Env:BUILD_VERSION
-      shell: pwsh
+    #- name: Get Build Version
+    #  run: |
+    #    Write-Host $Env:GITHUB_REF
+    #    $version =  $Env:GITHUB_REF.replace('refs/heads/release/','')
+    #    echo "BUILD_VERSION=$version" >> $Env:GITHUB_ENV
+    #    Write-Host $Env:BUILD_VERSION
+    #  shell: pwsh
 
-    - name: Restore dependencies
-      run: dotnet restore ${{env.SOLUTION_PATH}}
+    #- name: Restore dependencies
+    #  run: dotnet restore ${{env.SOLUTION_PATH}}
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ matrix.dotnet }}
+    #- name: Setup .NET
+    #  uses: actions/setup-dotnet@v3
+    #  with:
+    #    dotnet-version: ${{ matrix.dotnet }}
 
-    - name: Build
-      run: dotnet build ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} -p:Version=${{env.BUILD_VERSION}} --no-restore
+    #- name: Build
+    #  run: dotnet build ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} -p:Version=${{env.BUILD_VERSION}} --no-restore
       
-    - name: Pack
-      run: dotnet pack ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} --no-build --no-restore -o ${{env.DOTNET_ROOT}}/artifact /p:Version=${{env.BUILD_VERSION}}
+    #- name: Pack
+    #  run: dotnet pack ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} --no-build --no-restore -o ${{env.DOTNET_ROOT}}/artifact /p:Version=${{env.BUILD_VERSION}}
       
-    - name: List dotnet pack output
-      run: |
-        cd $Env:DOTNET_ROOT
-        cd ./artifact
-        ls
-      shell: pwsh
+    #- name: List dotnet pack output
+    #  run: |
+    #    cd $Env:DOTNET_ROOT
+    #    cd ./artifact
+    #    ls
+    #  shell: pwsh
       
-    - name: Run tests
-      run: dotnet test ${{env.TEST_PROJECT_PATH}} /p:Configuration=${{env.BUILD_CONFIG}} --no-restore --verbosity normal
+    #- name: Run tests
+    #  run: dotnet test ${{env.TEST_PROJECT_PATH}} /p:Configuration=${{env.BUILD_CONFIG}} --no-restore --verbosity normal
       
-    - name: Publish
+    #- name: Publish
+    #  if: startsWith(github.ref, 'refs/heads/release')
+    #  run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/*.nupkg --source ${{env.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY_GITHUB}}
+    - name: Create Release Tag
       if: startsWith(github.ref, 'refs/heads/release')
-      run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/*.nupkg --source ${{env.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY_GITHUB}}
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}          
+        script: |
+            try{
+              console.log("Initializing script");
+              console.log(`BUILD_VERSION: ${process.env.BUILD_VERSION}`)
+              console.log(`GITHUB_REF: ${process.env.GITHUB_REF}`)
+              const version = process.env.BUILD_VERSION;
+              const releaseTagPrefix = 'v';
+              const latestTagName = 'latest';
+              const releaseTagRefPrefix = `refs/tags/${releaseTagPrefix}`;
+              const releaseTag = `${releaseTagRefPrefix}${version}`;
+              const latestRefTag = `refs/tags/${latestTagName}`;
+              async function getAllTags(){
+                  const tagsResponse = await github.paginate(github.rest.git.listMatchingRefs, {
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: 'tags'
+                  });
+                  return tagsResponse;
+              }
+              function getLatestVersionTag(tagsResponse){
+                  let latestVersion = 0;
+                  let latestTag = "";
+                  tagsResponse.data.forEach(tag => {
+                      const tagVersion = tag.ref.replace(releaseTagRefPrefix,'');
+                      console.log(`TagVersion:${tagVersion}`);
+                      if(tagVersion <= latestVersion) return;
+                      latestVersion = tagVersion;
+                      latestTag = tag.ref;
+
+                  });
+                  return latestTag;
+              }
+              async function deleteLatestTagIfExists(){
+                  const tagExists = await github.git.getRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: latestRefTag
+                  });
+                  if(!tagExists) return;
+                  await github.git.deleteRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: latestRefTag
+                  });
+              }
+              async function createLatestTag() {
+                  await deleteLatestTagIfExists();
+                  console.log("Creating latest tag...");
+                  const tagResponse = await github.git.createRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: latestRefTag,
+                      sha: context.sha
+                  });
+                  console.log("Latest tag created...");
+                  return tagResponse;
+              }
+              async function createReleaseTag(){
+                  const tagResponse = await github.git.createRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: releaseTag,
+                      sha: context.sha
+                  });
+                  return tagResponse;
+              }
+
+              function versionIsGreaterThanLatestTag(latestTag){
+                  const latestTagVersion = latestTag.replace(releaseTagPrefix,'');
+                  return version > latestTagVersion;
+              }
+              console.log('Getting tags...');
+              const tags = getAllTags();
+              console.log('Getting latest version...');
+              const latestTag = getLatestVersionTag(tags);
+              if(versionIsGreaterThanLatestTag(latestTag))
+                  await createLatestTag();
+              await createReleaseTag();
+            } catch (e) {
+              console.log("Script error: " + e)
+            }
