@@ -140,6 +140,8 @@ jobs:
               }
               console.log('Getting tags...');
               const tags = await getAllTags();
+              console.log('Tags:');
+              console.log(tags);
               console.log('Getting latest version...');
               const latestTag = getLatestVersionTag(tags);
               if(versionIsGreaterThanLatestTag(latestTag))
