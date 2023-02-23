@@ -38,7 +38,7 @@ jobs:
       run: dotnet build ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} -p:Version=${{env.BUILD_VERSION}} --no-restore
       
     - name: Pack
-      run: dotnet pack ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} --no-build --no-restore -o ${{env.DOTNET_ROOT}}/artifact /p:Version
+      run: dotnet pack ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} --no-build --no-restore -o ${{env.DOTNET_ROOT}}/artifact /p:Version=${{env.BUILD_VERSION}}
       
     - name: List dotnet pack output
       run: |
