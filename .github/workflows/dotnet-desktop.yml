@@ -12,7 +12,7 @@ jobs:
       SOLUTION_PATH: 'src/Codescovery.Library.Commons.sln'
       PACKAGE_PROJECT_PATH: 'src/Package/Codescovery.Library.Commons/Codescovery.Library.Commons.csproj'
       TEST_PROJECT_PATH: 'src/Tests/Codescovery.Library.Commons.Test/Codescovery.Library.Commons.Test.csproj'
-      NUGET_SOURCE: 'https://nuget.pkg.github.com/NAMESPACE/index.json'
+      NUGET_SOURCE: 'https://nuget.pkg.github.com/codescovery/index.json'
     strategy:
       matrix:
         dotnet: [ '6.0.x','7.0.x' ]
