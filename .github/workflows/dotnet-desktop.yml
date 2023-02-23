@@ -42,4 +42,4 @@ jobs:
       
     - name: Publish
       if: startsWith(github.ref, 'refs/heads/release')
-      run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/**/*.nupkg -source ${{env.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY_GITHUB}}
+      run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/**/*.nupkg --source ${{env.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY_GITHUB}}
