@@ -40,7 +40,7 @@ jobs:
     - name: Pack
       run: dotnet pack ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} --no-build --no-restore -o ${{env.DOTNET_ROOT}}/artifact /p:Version
       
-    - name: List build output
+    - name: List dotnet pack output
       run: |
         cd $Env:DOTNET_ROOT
         cd ./artifact
