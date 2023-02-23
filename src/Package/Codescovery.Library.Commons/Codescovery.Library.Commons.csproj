@@ -3,12 +3,36 @@
   <PropertyGroup>
 	  <TargetFrameworks>net7.0</TargetFrameworks>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <PackageIcon>logo.png</PackageIcon>
+	  <RepositoryUrl>https://github.com/codescovery/library-commons</RepositoryUrl>
+	  <PackageProjectUrl>https://codescovery.com/nuget/packages/library-commons</PackageProjectUrl>
+	  <Copyright>Codescovery</Copyright>
+	  <Description>A pack of useful extensions, entities, helpers, exceptions</Description>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <IncludeSymbols>True</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Abstractions\Services\" />
     <Folder Include="Constants\" />
     <Folder Include="Interfaces\TimeSpan\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="C:\Users\vinic\OneDrive\__CODESCOVERY\ARTS\LOGO\EXPORTS\dark-with-background\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
