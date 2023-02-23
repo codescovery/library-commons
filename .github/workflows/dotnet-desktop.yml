@@ -4,6 +4,11 @@ on:
   create:
     branches:
       - release/**
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'LICENSE'
 
 jobs:
   build:
@@ -15,7 +20,7 @@ jobs:
       NUGET_SOURCE: 'https://nuget.pkg.github.com/codescovery/index.json'
     strategy:
       matrix:
-        dotnet: [ '6.0.x','7.0.x' ]
+        dotnet: [ '7.0.x' ]
     runs-on: ubuntu-latest
 
     steps:
