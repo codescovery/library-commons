@@ -139,7 +139,7 @@ jobs:
                   return version > latestTagVersion;
               }
               console.log('Getting tags...');
-              const tags = getAllTags();
+              const tags = await getAllTags();
               console.log('Getting latest version...');
               const latestTag = getLatestVersionTag(tags);
               if(versionIsGreaterThanLatestTag(latestTag))
