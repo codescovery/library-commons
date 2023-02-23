@@ -13,11 +13,13 @@ jobs:
       PACKAGE_PROJECT_PATH: 'src/Package/Codescovery.Library.Commons/Codescovery.Library.Commons.csproj'
       TEST_PROJECT_PATH: 'src/Tests/Codescovery.Library.Commons.Test/Codescovery.Library.Commons.Test.csproj'
       NUGET_SOURCE: 'https://nuget.pkg.github.com/NAMESPACE/index.json'
-
+    strategy:
+      matrix:
+        dotnet: [ 'netstandard2.0', 'netstandard2.1', '6.0.x','7.0.x' ]
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Get Build Version
       run: |
         Write-Host $Env:GITHUB_REF
@@ -30,9 +32,9 @@ jobs:
       run: dotnet restore ${{env.SOLUTION_PATH}}
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.x
+        dotnet-version: ${{ matrix.dotnet }}
 
     - name: Build
       run: dotnet build ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} -p:Version=${{env.BUILD_VERSION}} --no-restore
