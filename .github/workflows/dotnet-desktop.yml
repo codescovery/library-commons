@@ -87,7 +87,7 @@ jobs:
               }
               await createReleaseTag();
             } catch (e) {
-              console.log(`Error while creating release ${releaseTag} tag. Error: ${e} );
+              console.log(`Error while creating release ${releaseTag} tag. Error: ${e}` );
             }
     - name: Create Latest Tag
       if: startsWith(github.ref, 'refs/heads/development')
@@ -126,5 +126,5 @@ jobs:
               }
               await createLatestTag();
             } catch (e) {
-              console.log(`Error while creating latest ${releaseTag} tag. Error: ${e} );
+              console.log(`Error while creating latest ${releaseTag} tag. Error: ${e}` );
             }
