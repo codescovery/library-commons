@@ -39,11 +39,10 @@ namespace Codescovery.Library.Commons.Extensions
             
             return new FluentPropertySelectorService<T>(obj);
         }
-        public static IFluentPropertySelectorService<T> CloneWith<T>(this T obj) where T : new()
+        public static IFluentPropertySelectorService<T> DeepCloneWith<T>(this T obj) where T : new()
         {
 
             return new FluentPropertySelectorService<T>(obj.DeepClone());
         }
-
     }
 }

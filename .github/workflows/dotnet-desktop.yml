@@ -74,56 +74,8 @@ jobs:
               console.log(`GITHUB_REF: ${process.env.GITHUB_REF}`)
               const version = process.env.BUILD_VERSION;
               const releaseTagPrefix = 'v';
-              const latestTagName = 'latest';
               const releaseTagRefPrefix = `refs/tags/${releaseTagPrefix}`;
               const releaseTag = `${releaseTagRefPrefix}${version}`;
-              const latestRefTag = `refs/tags/${latestTagName}`;
-              async function getAllTags(){
-                  const tagsResponse = await github.paginate(github.rest.git.listMatchingRefs, {
-                      owner: context.repo.owner,
-                      repo: context.repo.repo,
-                      ref: 'tags'
-                  });
-                  return tagsResponse;
-              }
-              function getLatestVersionTag(tagsResponse){
-                  let latestVersion = 0;
-                  let latestTag = "";
-                  tagsResponse.data.forEach(tag => {
-                      const tagVersion = tag.ref.replace(releaseTagRefPrefix,'');
-                      console.log(`TagVersion:${tagVersion}`);
-                      if(tagVersion <= latestVersion) return;
-                      latestVersion = tagVersion;
-                      latestTag = tag.ref;
-
-                  });
-                  return latestTag;
-              }
-              async function deleteLatestTagIfExists(){
-                  const tagExists = await github.git.getRef({
-                      owner: context.repo.owner,
-                      repo: context.repo.repo,
-                      ref: latestRefTag
-                  });
-                  if(!tagExists) return;
-                  await github.git.deleteRef({
-                      owner: context.repo.owner,
-                      repo: context.repo.repo,
-                      ref: latestRefTag
-                  });
-              }
-              async function createLatestTag() {
-                  await deleteLatestTagIfExists();
-                  console.log("Creating latest tag...");
-                  const tagResponse = await github.git.createRef({
-                      owner: context.repo.owner,
-                      repo: context.repo.repo,
-                      ref: latestRefTag,
-                      sha: context.sha
-                  });
-                  console.log("Latest tag created...");
-                  return tagResponse;
-              }
               async function createReleaseTag(){
                   const tagResponse = await github.git.createRef({
                       owner: context.repo.owner,
@@ -133,20 +85,46 @@ jobs:
                   });
                   return tagResponse;
               }
-
-              function versionIsGreaterThanLatestTag(latestTag){
-                  const latestTagVersion = latestTag.replace(releaseTagPrefix,'');
-                  return version > latestTagVersion;
-              }
-              console.log('Getting tags...');
-              const tags = await getAllTags();
-              console.log('Tags:');
-              console.log(tags);
-              console.log('Getting latest version...');
-              const latestTag = getLatestVersionTag(tags);
-              if(versionIsGreaterThanLatestTag(latestTag))
-                  await createLatestTag();
               await createReleaseTag();
             } catch (e) {
-              console.log("Script error: " + e)
+              console.log(`Error while creating release ${releaseTag} tag. Error: ${e} );
+            }
+    - name: Create Latest Tag
+      if: startsWith(github.ref, 'refs/heads/development')
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}          
+        script: |
+            try{
+              console.log("Initializing script");
+              const tagPrefix = 'refs/tags/';
+              const latestTagName = 'latest';
+              const latestTagName = `${tagPrefix}{latestTagName}`;
+              async function deleteLatestTagIfExists(){
+                const tagResponse = await github.git.getRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: latestTag
+                  });
+                  if(tagResponse.status === 200){
+                    await github.git.deleteRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: latestTag
+                    });
+                  }
+              }
+              async function createLatestTag(){
+                  await deleteLatestTagIfExists();
+                  const tagResponse = await github.git.createRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: latestTag,
+                      sha: context.sha
+                  });
+                  return tagResponse;
+              }
+              await createLatestTag();
+            } catch (e) {
+              console.log(`Error while creating latest ${releaseTag} tag. Error: ${e} );
             }
