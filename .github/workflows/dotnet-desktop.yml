@@ -68,7 +68,7 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}          
         script: |
-            try{
+         
               console.log("Initializing script");
               console.log(`BUILD_VERSION: ${process.env.BUILD_VERSION}`)
               console.log(`GITHUB_REF: ${process.env.GITHUB_REF}`)
@@ -76,26 +76,27 @@ jobs:
               const releaseTagPrefix = 'v';
               const releaseTagRefPrefix = `refs/tags/${releaseTagPrefix}`;
               const releaseTag = `${releaseTagRefPrefix}${version}`;
-              async function createReleaseTag(){
-                  const tagResponse = await github.git.createRef({
-                      owner: context.repo.owner,
-                      repo: context.repo.repo,
-                      ref: releaseTag,
-                      sha: context.sha
-                  });
-                  return tagResponse;
+              try{
+                  async function createReleaseTag(){
+                      const tagResponse = await github.git.createRef({
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          ref: releaseTag,
+                          sha: context.sha
+                      });
+                      return tagResponse;
+                  }
+                  await createReleaseTag();
+              } catch (e) {
+                  console.log(`Error while creating release ${releaseTag} tag. Error: ${e}` );
               }
-              await createReleaseTag();
-            } catch (e) {
-              console.log(`Error while creating release ${releaseTag} tag. Error: ${e}` );
-            }
     - name: Create Latest Tag
       if: startsWith(github.ref, 'refs/heads/development')
       uses: actions/github-script@v6
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}          
         script: |
-            try{
+            
               console.log("Initializing script");
               const tagPrefix = 'refs/tags/';
               const latestTagName = 'latest';
@@ -124,7 +125,8 @@ jobs:
                   });
                   return tagResponse;
               }
-              await createLatestTag();
-            } catch (e) {
-              console.log(`Error while creating latest ${releaseTag} tag. Error: ${e}` );
-            }
+              try {
+                    await createLatestTag();
+              } catch (e) {
+                    console.log(`Error while creating latest ${releaseTag} tag. Error: ${e}` );
+              }
