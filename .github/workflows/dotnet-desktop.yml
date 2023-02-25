@@ -65,68 +65,83 @@ jobs:
     - name: Create Release Tag
       if: startsWith(github.ref, 'refs/heads/release')
       uses: actions/github-script@v6
+      env:
+            RELEASE_VERSION_PREFIX: 'v'
       with:
-        github-token: ${{secrets.GITHUB_TOKEN}}          
+        github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
          
-              console.log("Initializing script");
-              console.log(`BUILD_VERSION: ${process.env.BUILD_VERSION}`)
-              console.log(`GITHUB_REF: ${process.env.GITHUB_REF}`)
-              const version = process.env.BUILD_VERSION;
-              const releaseTagPrefix = 'v';
-              const releaseTagRefPrefix = `refs/tags/${releaseTagPrefix}`;
-              const releaseTag = `${releaseTagRefPrefix}${version}`;
-              try{
-                  async function createReleaseTag(){
-                      const tagResponse = await github.git.createRef({
+                console.log("Initializing script");
+                console.log(`BUILD_VERSION: ${process.env.BUILD_VERSION}`)
+                console.log(`GITHUB_REF: ${process.env.GITHUB_REF}`)
+                const version = process.env.BUILD_VERSION;
+                const tagRefPrefix = 'refs/tags/';
+                const versionPrefix = process.env.RELEASE_VERSION_PREFIX;
+                const releaseTag = `${versionPrefix}${version}`;
+                const releaseTagRef = `${tagRefPrefix}${releaseTag}`;
+                async function createReleaseTag(){
+                    try{
+                        const tagResponse = await context.octokit.git.createTag({
+                            owner: context.repo.owner,
+                            repo: context.repo.repo,
+                            tag: tagName,
+                            sha: context.sha,
+                            type: 'commit'
+                        });
+                        await context.octokit.git.createRef({
                           owner: context.repo.owner,
                           repo: context.repo.repo,
-                          ref: releaseTag,
-                          sha: context.sha
-                      });
-                      return tagResponse;
-                  }
-                  await createReleaseTag();
-              } catch (e) {
-                  console.log(`Error while creating release ${releaseTag} tag. Error: ${e}` );
-              }
+                          ref: releaseTagRef,
+                          sha: sha
+                        });
+                        return tagResponse;
+                    } catch (e) {
+                        console.log(`Error while creating release ${releaseTagRef} tag. Error: ${e}` );
+                    }
+                }
+                await createReleaseTag();
+
     - name: Create Latest Tag
       if: startsWith(github.ref, 'refs/heads/development')
       uses: actions/github-script@v6
+      env:
+        LATEST_TAG_NAME: 'latest'
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}          
         script: |
             
               console.log("Initializing script");
+              const octokit = new Octokit();
               const tagPrefix = 'refs/tags/';
-              const latestTagName = 'latest';
-              const latestTagName = `${tagPrefix}{latestTagName}`;
+              const latestTagName = process.env.LATEST_TAG_NAME;
+              const latestTagRef =`${tagRefPrefix}${latestTagName}`;
               async function deleteLatestTagIfExists(){
-                const tagResponse = await github.git.getRef({
-                      owner: context.repo.owner,
-                      repo: context.repo.repo,
-                      ref: latestTag
+                const tagResponse = await context.octokit.git.getRef({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    ref: latestTagRef
                   });
-                  if(tagResponse.status === 200){
-                    await github.git.deleteRef({
-                      owner: context.repo.owner,
-                      repo: context.repo.repo,
-                      ref: latestTag
-                    });
-                  }
+                if(tagResponse.status !== 200) return;
+                await context.octokit.git.deleteRef({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    ref: latestTagRef
+                });
+                  
               }
               async function createLatestTag(){
-                  await deleteLatestTagIfExists();
-                  const tagResponse = await github.git.createRef({
-                      owner: context.repo.owner,
-                      repo: context.repo.repo,
-                      ref: latestTag,
-                      sha: context.sha
-                  });
-                  return tagResponse;
+                try {
+                    await deleteLatestTagIfExists();
+                    const tagResponse = await context.octokit.git.createRef({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        ref: latestTagRef,
+                        sha: context.sha
+                    });
+                    return tagResponse;
+                } catch (e) {
+                    console.log(`Error while creating latest ${latestTagRef} tag. Error: ${e}` );
+                }
               }
-              try {
-                    await createLatestTag();
-              } catch (e) {
-                    console.log(`Error while creating latest ${releaseTag} tag. Error: ${e}` );
-              }
+              
+              await createLatestTag();
