@@ -87,6 +87,7 @@ jobs:
                             tag: releaseTag,
                             message: `Tagging commit ${sha}`,
                             object: context.sha,
+                            sha: context.sha,
                             type: 'commit'
                         });
                         await github.rest.git.createRef({
