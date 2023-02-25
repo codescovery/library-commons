@@ -84,7 +84,7 @@ jobs:
                         const tagResponse = await github.rest.git.createTag({
                             owner: context.repo.owner,
                             repo: context.repo.repo,
-                            tag: tagName,
+                            tag: releaseTag,
                             sha: context.sha,
                             type: 'commit'
                         });
