@@ -27,13 +27,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    #- name: Get Build Version
-    #  run: |
-    #    Write-Host $Env:GITHUB_REF
-    #    $version =  $Env:GITHUB_REF.replace('refs/heads/release/','')
-    #    echo "BUILD_VERSION=$version" >> $Env:GITHUB_ENV
-    #    Write-Host $Env:BUILD_VERSION
-    #  shell: pwsh
+    - name: Get Build Version
+      run: |
+        Write-Host $Env:GITHUB_REF
+        $version =  $Env:GITHUB_REF.replace('refs/heads/release/','')
+        echo "BUILD_VERSION=$version" >> $Env:GITHUB_ENV
+        Write-Host $Env:BUILD_VERSION
+      shell: pwsh
 
     #- name: Restore dependencies
     #  run: dotnet restore ${{env.SOLUTION_PATH}}
@@ -81,14 +81,14 @@ jobs:
                 const releaseTagRef = `${tagRefPrefix}${releaseTag}`;
                 async function createReleaseTag(){
                     try{
-                        const tagResponse = await context.octokit.git.createTag({
+                        const tagResponse = await github.rest.git.createTag({
                             owner: context.repo.owner,
                             repo: context.repo.repo,
                             tag: tagName,
                             sha: context.sha,
                             type: 'commit'
                         });
-                        await context.octokit.git.createRef({
+                        await github.rest.git.createRef({
                           owner: context.repo.owner,
                           repo: context.repo.repo,
                           ref: releaseTagRef,
@@ -111,18 +111,17 @@ jobs:
         script: |
             
               console.log("Initializing script");
-              const octokit = new Octokit();
               const tagPrefix = 'refs/tags/';
               const latestTagName = process.env.LATEST_TAG_NAME;
               const latestTagRef =`${tagRefPrefix}${latestTagName}`;
               async function deleteLatestTagIfExists(){
-                const tagResponse = await context.octokit.git.getRef({
+                const tagResponse = await github.rest.git.getRef({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     ref: latestTagRef
                   });
                 if(tagResponse.status !== 200) return;
-                await context.octokit.git.deleteRef({
+                await github.rest.git.deleteRef({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     ref: latestTagRef
@@ -132,7 +131,7 @@ jobs:
               async function createLatestTag(){
                 try {
                     await deleteLatestTagIfExists();
-                    const tagResponse = await context.octokit.git.createRef({
+                    const tagResponse = await github.rest.git.createRef({
                         owner: context.repo.owner,
                         repo: context.repo.repo,
                         ref: latestTagRef,
