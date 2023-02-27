@@ -131,11 +131,13 @@ jobs:
               async function deleteLatestTagIfExists(){
                 const latestTagExistsResponse = await latestTagExists();
                 if(!latestTagExistsResponse) return;
+                console.log(`Latest tag ${latestTagRef} exists. Deleting latest tag...`);
                 await github.rest.git.deleteRef({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     ref: latestTagRef
                 });
+                console.log(`Latest tag ${latestTagRef} deleted.`);
                   
               }
               async function createLatestTag(){
