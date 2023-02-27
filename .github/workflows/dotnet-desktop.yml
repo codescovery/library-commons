@@ -121,7 +121,7 @@ jobs:
                   });
                    return true;
                 } catch (e) {
-                    const errorMessage = `Error while getting latest tag. Error: ${e}`;
+                    const errorMessage = `Error while getting latest tag. Error : ${e}`;
                     console.error(errorMessage);
                     return false;
                 }
