@@ -98,7 +98,9 @@ jobs:
                         });
                         return tagResponse;
                     } catch (e) {
-                        console.log(`Error while creating release ${releaseTagRef} tag. Error: ${e}` );
+                        const errorMessage = `Error while creating release ${releaseTagRef} tag. Error: ${e}`;
+                        console.error(errorMessage);
+                        core.setFailed(errorMessage)
                     }
                 }
                 await createReleaseTag();
@@ -141,7 +143,9 @@ jobs:
                     });
                     return tagResponse;
                 } catch (e) {
-                    console.log(`Error while creating latest ${latestTagRef} tag. Error: ${e}` );
+                    const errorMessage =`Error while creating latest ${latestTagRef} tag. Error: ${e}`;
+                    console.error(errorMessage);
+                    core.setFailed(errorMessage)
                 }
               }
               
