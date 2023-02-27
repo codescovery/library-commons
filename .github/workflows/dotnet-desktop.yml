@@ -119,6 +119,7 @@ jobs:
                     repo: context.repo.repo,
                     ref: latestTagRef
                   });
+                   console.log(tagResponse);
                    if(tagResponse.status !== 200) return false;
                    return true;
                 } catch (e) {
