@@ -4,6 +4,8 @@ on:
   create:
     branches:
       - release/**
+  pull_request:
+      branches:
       - main
       - development
   push:
@@ -107,7 +109,7 @@ jobs:
         script: |
             
               console.log("Initializing script");
-              const tagPrefix = 'refs/tags/';
+              const tagRefPrefix = 'refs/tags/';
               const latestTagName = process.env.LATEST_TAG_NAME;
               const latestTagRef =`${tagRefPrefix}${latestTagName}`;
               async function deleteLatestTagIfExists(){
