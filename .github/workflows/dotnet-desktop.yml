@@ -26,7 +26,7 @@ jobs:
         dotnet: [ '7.0.x' ]
     runs-on: ubuntu-latest
 
-    steps:
+    steps: 
     - uses: actions/checkout@v3
     - name: Get Build Version
       if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
