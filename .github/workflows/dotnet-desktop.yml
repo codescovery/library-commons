@@ -4,8 +4,8 @@ on:
   create:
     branches:
       - release/**
-      - main
-      - development
+      #- main
+      #- development
   push:
     paths-ignore:
       - 'docs/**'
