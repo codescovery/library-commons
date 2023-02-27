@@ -7,12 +7,12 @@ on:
     
   push:
       branches:
-      - main
-      - development 
+        - main
+        - development 
       paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'LICENSE'
+        - 'docs/**'
+        - 'README.md'
+        - 'LICENSE'
 jobs:
   build:
     env:
