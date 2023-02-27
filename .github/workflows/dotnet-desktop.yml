@@ -119,8 +119,6 @@ jobs:
                     repo: context.repo.repo,
                     ref: `tags/${latestTagName}`
                   });
-                   console.log(`Tag response ${tagResponse}`);
-                   if(tagResponse.status !== 200) return false;
                    return true;
                 } catch (e) {
                     const errorMessage = `Error while getting latest tag. Error: ${e}`;
