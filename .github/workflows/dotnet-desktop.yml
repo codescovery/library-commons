@@ -109,7 +109,7 @@ jobs:
         script: |
             
               console.log("Initializing script");
-              const tagRefPrefix = 'refs/tags/';
+              const tagRefPrefix = 'tags/';
               const latestTagName = process.env.LATEST_TAG_NAME;
               const latestTagRef =`${tagRefPrefix}${latestTagName}`;
               async function latestTagExists(){
