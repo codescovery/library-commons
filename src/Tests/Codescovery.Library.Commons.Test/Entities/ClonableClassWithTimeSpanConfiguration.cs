@@ -3,5 +3,5 @@ namespace Codescovery.Library.Commons.Test.Entities;
 
 public class ClonableClassWithTimeSpanConfiguration:ClonableExampleClass
 {
-    public TimeSpanConfiguration TimeSpanConfiguration { get; set; }
+    public TimeSpanConfiguration? TimeSpanConfiguration { get; set; }
 }

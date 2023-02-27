@@ -73,7 +73,7 @@ public class FluentObjectPropertySetterTester
         {
             ExampleInt = 1
         };
-       var cloned= exampleClass.CloneWith()
+       var cloned= exampleClass.DeepCloneWith()
             .Property(@class => @class.ExampleInt)
             .Set(intValue)
             .And()
