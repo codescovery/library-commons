@@ -79,6 +79,7 @@ jobs:
                 const versionPrefix = process.env.RELEASE_VERSION_PREFIX;
                 const releaseTag = `${versionPrefix}${version}`;
                 const releaseTagRef = `${tagRefPrefix}${releaseTag}`;
+                console.log(`Sha: ${context.sha}` );
                 async function createReleaseTag(){
                     try{
                         const tagResponse = await github.rest.git.createTag({
