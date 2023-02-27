@@ -112,13 +112,24 @@ jobs:
               const tagRefPrefix = 'refs/tags/';
               const latestTagName = process.env.LATEST_TAG_NAME;
               const latestTagRef =`${tagRefPrefix}${latestTagName}`;
-              async function deleteLatestTagIfExists(){
-                const tagResponse = await github.rest.git.getRef({
+              async function latestTagExists(){
+                try{
+                   const tagResponse = await github.rest.git.getRef({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     ref: latestTagRef
                   });
-                if(tagResponse.status !== 200) return;
+                   if(tagResponse.status !== 200) return false;
+                   return true;
+                } catch (e) {
+                    const errorMessage = `Error while getting latest tag. Error: ${e}`;
+                    console.error(errorMessage);
+                    return false;
+                }
+              }
+              async function deleteLatestTagIfExists(){
+                const latestTagExistsResponse = await latestTagExists();
+                if(!latestTagExistsResponse) return;
                 await github.rest.git.deleteRef({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
