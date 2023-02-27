@@ -29,7 +29,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Get Build Version
-      if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
       run: |
         Write-Host $Env:GITHUB_REF
         $version =  $Env:GITHUB_REF.replace('refs/heads/release/','')
