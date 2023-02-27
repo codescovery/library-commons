@@ -82,22 +82,13 @@ jobs:
                 
                 async function createReleaseTag(){
                     try{
-                        console.log(`Sha: ${context.sha}` );
-                        //const tagResponse = await github.rest.git.createTag({
-                        //    owner: context.repo.owner,
-                        //    repo: context.repo.repo,
-                        //    tag: releaseTag,
-                        //    message: `Tagging commit ${sha}`,
-                        //    object: context.sha,
-                        //    type: 'commit'
-                        //});
-                        await github.rest.git.createRef({
+                        const tagResponse = await github.rest.git.createRef({
                           owner: context.repo.owner,
                           repo: context.repo.repo,
                           ref: releaseTagRef,
                           sha: context.sha
                         });
-                        return true;
+                        return tagResponse;
                     } catch (e) {
                         const errorMessage = `Error while creating release ${releaseTagRef} tag. Error: ${e}`;
                         console.error(errorMessage);
