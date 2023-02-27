@@ -4,16 +4,15 @@ on:
   create:
     branches:
       - release/**
+    
   pull_request:
       branches:
       - main
-      - development
-  push:
-    paths-ignore:
+      - development 
+      paths-ignore:
       - 'docs/**'
       - 'README.md'
       - 'LICENSE'
-
 jobs:
   build:
     env:
