@@ -97,7 +97,7 @@ jobs:
                           ref: releaseTagRef,
                           sha: context.sha
                         });
-                        return tagResponse;
+                        return true;
                     } catch (e) {
                         const errorMessage = `Error while creating release ${releaseTagRef} tag. Error: ${e}`;
                         console.error(errorMessage);
