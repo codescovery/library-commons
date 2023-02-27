@@ -109,7 +109,7 @@ jobs:
         script: |
             
               console.log("Initializing script");
-              const tagRefPrefix = 'tags/';
+              const tagRefPrefix = 'refs/tags/';
               const latestTagName = process.env.LATEST_TAG_NAME;
               const latestTagRef =`${tagRefPrefix}${latestTagName}`;
               async function latestTagExists(){
@@ -117,7 +117,7 @@ jobs:
                    const tagResponse = await github.rest.git.getRef({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
-                    ref: latestTagRef
+                    ref: `tags/${latestTagName}`
                   });
                    console.log(`Tag response ${tagResponse}`);
                    if(tagResponse.status !== 200) return false;
