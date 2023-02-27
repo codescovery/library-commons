@@ -21,9 +21,12 @@ The deep clone extension uses Activator.CreateInstace to clone the entity.
 
 This approach considered some studies made by  [cinorid](https://stackoverflow.com/users/6338072/cinorid) in this [answer](https://stackoverflow.com/a/69211283/9114389).
 
-    BenchmarkDotNet=v0.13.1, OS=Windows 10.0.18363.1734 (1909/November2019Update/19H2)
+  BenchmarkDotNet=v0.13.1, OS=Windows 10.0.18363.1734 (1909/November2019Update/19H2)
+  
   Intel Core i5-6200U CPU 2.30GHz (Skylake), 1 CPU, 4 logical and 2 physical cores
+  
   [Host]     : .NET Framework 4.8 (4.8.4400.0), X86 LegacyJIT
+  
   DefaultJob : .NET Framework 4.8 (4.8.4400.0), X86 LegacyJIT
 
 
