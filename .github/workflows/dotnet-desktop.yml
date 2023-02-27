@@ -91,12 +91,12 @@ jobs:
                             sha: context.sha,
                             type: 'commit'
                         });
-                        #await github.rest.git.createRef({
-                        #  owner: context.repo.owner,
-                        #  repo: context.repo.repo,
-                        #  ref: releaseTagRef,
-                        #  sha: context.sha
-                        #});
+                        //await github.rest.git.createRef({
+                        //  owner: context.repo.owner,
+                        //  repo: context.repo.repo,
+                        //  ref: releaseTagRef,
+                        //  sha: context.sha
+                        //});
                         return tagResponse;
                     } catch (e) {
                         const errorMessage = `Error while creating release ${releaseTagRef} tag. Error: ${e}`;
