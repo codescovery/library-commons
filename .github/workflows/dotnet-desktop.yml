@@ -29,7 +29,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Get Build Version
-      if: startsWith(github.ref, 'refs/heads/release')
+      if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
       run: |
         Write-Host $Env:GITHUB_REF
         $version =  $Env:GITHUB_REF.replace('refs/heads/release/','')
@@ -37,35 +37,41 @@ jobs:
         Write-Host $Env:BUILD_VERSION
       shell: pwsh
        
-    #- name: Restore dependencies
-    #  run: dotnet restore ${{env.SOLUTION_PATH}}
+    - name: Restore dependencies
+      run: dotnet restore ${{env.SOLUTION_PATH}}
 
-    #- name: Setup .NET
-    #  uses: actions/setup-dotnet@v3
-    #  with:
-    #    dotnet-version: ${{ matrix.dotnet }}
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
 
-    #- name: Build
-    #  run: dotnet build ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} -p:Version=${{env.BUILD_VERSION}} --no-restore
+    - name: Build
+      run: dotnet build ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} -p:Version=${{env.BUILD_VERSION}} --no-restore
       
-    #- name: Pack
-    #  run: dotnet pack ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} --no-build --no-restore -o ${{env.DOTNET_ROOT}}/artifact /p:Version=${{env.BUILD_VERSION}}
+    - name: Pack
+      if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
+      run: dotnet pack ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} --no-build --no-restore -o ${{env.DOTNET_ROOT}}/artifact /p:Version=${{env.BUILD_VERSION}}
       
-    #- name: List dotnet pack output
-    #  run: |
-    #    cd $Env:DOTNET_ROOT
-    #    cd ./artifact
-    #    ls
-    #  shell: pwsh
+    - name: List dotnet pack output
+      run: |
+        cd $Env:DOTNET_ROOT
+        cd ./artifact
+        ls
+      shell: pwsh
       
-    #- name: Run tests
-    #  run: dotnet test ${{env.TEST_PROJECT_PATH}} /p:Configuration=${{env.BUILD_CONFIG}} --no-restore --verbosity normal
+    - name: Run tests
+      run: dotnet test ${{env.TEST_PROJECT_PATH}} /p:Configuration=${{env.BUILD_CONFIG}} --no-restore --verbosity normal
       
-    #- name: Publish
-    #  if: startsWith(github.ref, 'refs/heads/release')
-    #  run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/*.nupkg --source ${{env.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY_GITHUB}}
+    - name: Publish GitHub Packages
+      if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
+      run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/*.nupkg --source ${{env.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY_GITHUB}}
+      
+    - name: Publish Nuget Packages
+      if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
+      run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/*.nupkg --source ${{env.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY_NUGET}}  
+      
     - name: Create Release Tag
-      if: startsWith(github.ref, 'refs/heads/release')
+      if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
       uses: actions/github-script@v6
       env:
             RELEASE_VERSION_PREFIX: 'v'
