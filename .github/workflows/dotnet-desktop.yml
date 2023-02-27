@@ -103,7 +103,7 @@ jobs:
       if: startsWith(github.ref, 'refs/heads/development')
       uses: actions/github-script@v6
       env:
-        LATEST_TAG_NAME: 'latest'
+        LATEST_TAG_NAME: 'latest' 
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}          
         script: |
