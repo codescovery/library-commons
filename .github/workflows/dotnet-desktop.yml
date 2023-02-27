@@ -79,9 +79,10 @@ jobs:
                 const versionPrefix = process.env.RELEASE_VERSION_PREFIX;
                 const releaseTag = `${versionPrefix}${version}`;
                 const releaseTagRef = `${tagRefPrefix}${releaseTag}`;
-                console.log(`Sha: ${context.sha}` );
+                
                 async function createReleaseTag(){
                     try{
+                        console.log(`Sha: ${context.sha}` );
                         const tagResponse = await github.rest.git.createTag({
                             owner: context.repo.owner,
                             repo: context.repo.repo,
@@ -90,12 +91,12 @@ jobs:
                             object: context.sha,
                             type: 'commit'
                         });
-                        await github.rest.git.createRef({
-                          owner: context.repo.owner,
-                          repo: context.repo.repo,
-                          ref: releaseTagRef,
-                          sha: context.sha
-                        });
+                        //await github.rest.git.createRef({
+                        //  owner: context.repo.owner,
+                        //  repo: context.repo.repo,
+                        //  ref: releaseTagRef,
+                        //  sha: context.sha
+                        //});
                         return tagResponse;
                     } catch (e) {
                         const errorMessage = `Error while creating release ${releaseTagRef} tag. Error: ${e}`;
