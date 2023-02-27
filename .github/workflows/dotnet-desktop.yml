@@ -48,20 +48,13 @@ jobs:
     - name: Build
       run: dotnet build ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} --no-restore
       
-    - name: Pack
-      if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
-      run: dotnet pack ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} --no-build --no-restore -o ${{env.DOTNET_ROOT}}/artifact /p:Version=${{env.BUILD_VERSION}}
-      
-    - name: List dotnet pack output
-      run: |
-        cd $Env:DOTNET_ROOT
-        cd ./artifact
-        ls
-      shell: pwsh
-      
     - name: Run tests
       run: dotnet test ${{env.TEST_PROJECT_PATH}} /p:Configuration=${{env.BUILD_CONFIG}} --no-restore --verbosity normal
       
+    - name: Pack
+      if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
+      run: dotnet pack ${{env.PACKAGE_PROJECT_PATH}} --configuration ${{env.BUILD_CONFIG}} --no-build --no-restore -o ${{env.DOTNET_ROOT}}/artifact /p:Version=${{env.BUILD_VERSION}}
+    
     - name: Publish GitHub Packages
       if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
       run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/*.nupkg --source ${{env.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY_GITHUB}}
