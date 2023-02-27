@@ -3,7 +3,7 @@
 public class ObjectExtensionsIsNullOrDefaultDynamicItem
 {
 
-    public Type Type { get; set; }
+    public Type? Type { get; set; }
     public bool ExpectedResult { get; set; }
 
 }
