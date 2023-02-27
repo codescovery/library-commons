@@ -34,7 +34,7 @@ jobs:
         echo "BUILD_VERSION=$version" >> $Env:GITHUB_ENV
         Write-Host $Env:BUILD_VERSION
       shell: pwsh
-
+       
     #- name: Restore dependencies
     #  run: dotnet restore ${{env.SOLUTION_PATH}}
 
