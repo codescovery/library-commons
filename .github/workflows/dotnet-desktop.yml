@@ -20,7 +20,8 @@ jobs:
       SOLUTION_PATH: 'src/Codescovery.Library.Commons.sln'
       PACKAGE_PROJECT_PATH: 'src/Package/Codescovery.Library.Commons/Codescovery.Library.Commons.csproj'
       TEST_PROJECT_PATH: 'src/Tests/Codescovery.Library.Commons.Test/Codescovery.Library.Commons.Test.csproj'
-      NUGET_SOURCE: 'https://nuget.pkg.github.com/codescovery/index.json'
+      NUGET_SOURCE_GITHUB: 'https://nuget.pkg.github.com/codescovery/index.json'
+      NUGET_SOURCE_NUGET: 'https://api.nuget.org/v3/index.json'
     strategy:
       matrix:
         dotnet: [ '7.0.x' ]
@@ -57,11 +58,11 @@ jobs:
     
     - name: Publish GitHub Packages
       if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
-      run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/*.nupkg --source ${{env.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY_GITHUB}}
+      run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/*.nupkg --source ${{env.NUGET_SOURCE_GITHUB}} --api-key ${{secrets.NUGET_API_KEY_GITHUB}}
       
     - name: Publish Nuget Packages
       if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
-      run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/*.nupkg --source ${{env.NUGET_SOURCE}} --api-key ${{secrets.NUGET_API_KEY_NUGET}}  
+      run: dotnet nuget push ${{env.DOTNET_ROOT}}/artifact/*.nupkg --source ${{env.NUGET_SOURCE_NUGET}} --api-key ${{secrets.NUGET_API_KEY_NUGET}}  
       
     - name: Create Release Tag
       if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
