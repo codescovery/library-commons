@@ -36,12 +36,14 @@ namespace Codescovery.Library.Commons.Extensions
         }
         public static IFluentPropertySelectorService<T> With<T>(this T obj) 
         {
-            
             return new FluentPropertySelectorService<T>(obj);
+        }
+        public static void FillWith<T>(this T obj, T source) where T : class
+        {
+            source.DeepClone(obj);
         }
         public static IFluentPropertySelectorService<T> DeepCloneWith<T>(this T obj) where T : new()
         {
-
             return new FluentPropertySelectorService<T>(obj.DeepClone());
         }
     }
