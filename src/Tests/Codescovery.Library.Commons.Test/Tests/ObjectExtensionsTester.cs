@@ -88,5 +88,60 @@ namespace Codescovery.Library.Commons.Test.Tests
             ClonableExampleClass? newObject = null;
             Assert.ThrowsException<ArgumentNullException>(()=>newObject.FillWith(sourceObject));
         }
+        [TestMethod]
+        public void ObjectWith()
+        {
+            var randomizer = DeepRandomizerServiceBuilder.BuildDefault();
+            var sourceObject = randomizer.Randomize<ClonableExampleClass>(4);
+            var sourceObjectString = JsonSerializer.Serialize(sourceObject);
+            var newObject = sourceObject.WithValues(new ClonableExampleClass
+            {
+                ExampleString = "teste",
+                ExampleEnum = ExampleEnum.Value2,
+                ExampleList = new List<ClonableExampleClass>
+                {
+                    new ClonableExampleClass{ExampleString = "teste2"}
+                }
+            });
+            Assert.AreNotEqual(sourceObjectString, JsonSerializer.Serialize(newObject));
+        }
+        [TestMethod]
+        public void ObjectWithNewObjectNull()
+        {
+            var randomizer = DeepRandomizerServiceBuilder.BuildDefault();
+            var sourceObject = randomizer.Randomize<ClonableExampleClass>(4);
+            var sourceObjectString = JsonSerializer.Serialize(sourceObject);
+            
+            var newObject = sourceObject.WithValues();
+            Assert.AreEqual(sourceObjectString, JsonSerializer.Serialize(newObject));
+        }
+        [TestMethod]
+        public void SourceObjectNullWithNewValues()
+        {
+            var randomizer = DeepRandomizerServiceBuilder.BuildDefault();
+            ClonableExampleClass? sourceObject = null;
+            var sourceObjectString = JsonSerializer.Serialize(sourceObject);
+
+            var newObject = sourceObject.WithValues(new ClonableExampleClass
+            {
+                ExampleString = "teste",
+                ExampleEnum = ExampleEnum.Value2,
+                ExampleList = new List<ClonableExampleClass>
+                {
+                    new ClonableExampleClass{ExampleString = "teste2"}
+                }
+            });
+            Assert.AreNotEqual(sourceObjectString, JsonSerializer.Serialize(newObject));
+        }
+        [TestMethod]
+        public void SourceObjectNullWithNewNullValues()
+        {
+            var randomizer = DeepRandomizerServiceBuilder.BuildDefault();
+            ClonableExampleClass? sourceObject = null;
+            var sourceObjectString = JsonSerializer.Serialize(sourceObject);
+
+            var newObject = sourceObject.WithValues();
+            Assert.AreEqual(sourceObjectString, JsonSerializer.Serialize(newObject));
+        }
     }
 }
