@@ -188,6 +188,9 @@ Or you can inherint our **BaseException** class that will handle it for you.
 
 Converts any objects to a list of type
 
+### ValueIn
+Checks if a string value is in a ```csharp IEnumerable<string>``` of string
+
 # Helpers
 
 ## ConfiguratioBuilder Helper

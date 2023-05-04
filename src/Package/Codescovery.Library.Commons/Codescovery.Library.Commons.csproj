@@ -12,6 +12,7 @@
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <IncludeSymbols>True</IncludeSymbols>
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -9,12 +9,12 @@ namespace Codescovery.Library.Commons.Extensions
 {
     public static class ObjectExtensions
     {
-        public static bool IsNullOrDefault(this object obj)
+        public static bool IsNullOrDefault(this object? obj)
         {
             return obj == null || obj.Equals(default);
         }
 
-        public static T As<T>(this object sourceObject, T defaultValue = default, bool throwExceptionOnError = false)
+        public static T? As<T>(this object sourceObject, T? defaultValue = default, bool throwExceptionOnError = false)
         {
             try
             {
