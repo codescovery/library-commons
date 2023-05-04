@@ -21,7 +21,7 @@ namespace Codescovery.Library.Commons.Extensions
         {
             return source.AsList();
         }
-        public static bool ValueIn<T>(this IEnumerable<string>? source, string? value, StringComparison stringComparison =StringComparison.InvariantCultureIgnoreCase)
+        public static bool ValueIn(this IEnumerable<string>? source, string? value, StringComparison stringComparison =StringComparison.InvariantCultureIgnoreCase)
         {
             if (source.IsNullOrDefault() || value.IsNullOrDefault())
                 return false;
