@@ -41,6 +41,60 @@ DefaultJob : .NET Framework 4.8 (4.8.4400.0), X86 LegacyJIT
 
 
 
+## Object Extensions
+
+Provides six Methods: 
+
+### IsNullOrDefault
+
+```C#
+bool IsNullOrDefault(this object obj)
+```
+
+Returns whether object has a null or a default value 
+
+### As
+
+```C#
+T As<T>(this object sourceObject, T defaultValue = default, bool throwExceptionOnError = false)
+```
+
+Cast an object to a Generic Type.
+
+It throws an **CastingException** case *throwExceptionOnError* argument is **true**, else it will return a default value;
+
+### And
+
+```C#
+IFluentPropertySelectorService<T> And<T>(this T obj)
+```
+
+Returns an IFluentPropertySelectorService used in [Fluent property Setter](#Fluent property Setter).
+
+### With
+
+```C#
+ IFluentPropertySelectorService<T> With<T>(this T obj)
+```
+
+Returns an IFluentPropertySelectorService used in [Fluent property Setter](#Fluent property Setter).
+
+### FillWith
+
+```C#
+void FillWith<T>(this T obj, T source) where T : class
+```
+
+Fill **obj** with the values from **source** object using [DeepCloneExtensions](#Deep Clone Extension)
+
+### DeepCloneWith
+
+```C#
+IFluentPropertySelectorService<T> DeepCloneWith<T>(this T obj) where T : new()
+```
+
+Creates a new cloned instance of generic type **T** using [DeepCloneExtensions](#Deep Clone Extension)
+
 ## Base64
 
 There's an extension that will handle base64 encode and decode from a raw string

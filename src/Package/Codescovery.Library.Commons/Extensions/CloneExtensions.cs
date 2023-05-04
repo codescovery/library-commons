@@ -17,13 +17,31 @@ namespace Codescovery.Library.Commons.Extensions
 
             do
                 if (type != null)
-                    Clone(source, bindingFlags, type, result);
+                    CloneNew(source, bindingFlags, type, result);
             while (type != null && (type = type.BaseType) != typeof(object));
 
             return result;
         }
+        public static void DeepClone<T>(this T source,T to, BindingFlags bindingFlags = DefaultBindingFlags)
+            where T : class
+        {
+            if (source == null || source.Equals(default(T)))
+                return;
+            if(to.IsNullOrDefault())
+                throw new ArgumentNullException($"You must initialize the {nameof(to)} parameter before cloning");
+            var type = typeof(T);
+            do
+                if (type != null)
+                    Clone(source, bindingFlags, type, to);
+            while (type != null && (type = type.BaseType) != typeof(object));
+        }
 
-        public static void Clone<T>(this T source, BindingFlags bindingFlags, Type type, T result) where T : new()
+        public static void CloneNew<T>(this T source, BindingFlags bindingFlags, Type type, T result) where T : new()
+        {
+            foreach (var field in type.GetFields(bindingFlags))
+                field.SetValue(result, field.GetValue(source));
+        }
+        public static void Clone<T>(this T source, BindingFlags bindingFlags, Type type, T result) where T : class
         {
             foreach (var field in type.GetFields(bindingFlags))
                 field.SetValue(result, field.GetValue(source));
