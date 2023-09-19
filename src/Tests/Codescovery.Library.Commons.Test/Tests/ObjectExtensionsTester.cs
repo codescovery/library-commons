@@ -1,7 +1,6 @@
 ﻿using Codescovery.Library.Commons.Test.Enums;
 using System.Diagnostics;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Codescovery.Library.Commons.Builders;
 using Codescovery.Library.Commons.Extensions;
 using Codescovery.Library.Commons.Test.Entities;
