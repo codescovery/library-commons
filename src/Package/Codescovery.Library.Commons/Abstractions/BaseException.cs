@@ -7,12 +7,12 @@ namespace Codescovery.Library.Commons.Abstractions
     public abstract class BaseException : Exception
     {
         
-        public string AditionalInformation { get; }
+        public string? AditionalInformation { get; }
         public bool IncludeStackTrace { get; }
-        public abstract string DefaultMessage { get; }
+        public abstract string? DefaultMessage { get; }
 
 
-        protected BaseException(string aditionalInformation = null, Exception innerException = null,
+        protected BaseException(string? aditionalInformation = null, Exception? innerException = null,
             bool includeStackTrace = true) : base(ExceptionConstants.DefaultErrorMesage, innerException)
         {
             IncludeStackTrace = includeStackTrace;

@@ -10,9 +10,9 @@ namespace Codescovery.Library.Commons.Exceptions
     {
 
         public string Pattern { get; }
-        public override string DefaultMessage => RegexConstants.DefaultInvalidRegexCastingMessageTemplate.FormatString(Pattern);
-        public RegexCastingException(string pattern, string aditionalMessage = null,
-            Exception innerException = null, bool includeStackTrace = true)
+        public override string? DefaultMessage => RegexConstants.DefaultInvalidRegexCastingMessageTemplate.FormatString(Pattern);
+        public RegexCastingException(string pattern, string? aditionalMessage = null,
+            Exception? innerException = null, bool includeStackTrace = true)
             : base(aditionalMessage, innerException, includeStackTrace)
         {
             Pattern = pattern;

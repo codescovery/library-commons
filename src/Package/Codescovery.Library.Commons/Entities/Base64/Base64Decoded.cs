@@ -7,31 +7,33 @@ namespace Codescovery.Library.Commons.Entities.Base64
 {
     public class Base64Decoded
     {
-        public Base64Decoded(Base64Encoded base64Encoded)
+        public Base64Decoded(Base64Encoded? base64Encoded)
         {
+
             Value = Decode(base64Encoded);
         }
 
-        internal string Value { get; }
+        internal string? Value { get; }
 
-        private static string Decode(Base64Encoded base64Encoded)
+        private static string? Decode(Base64Encoded? base64Encoded)
         {
-            if (base64Encoded == null || base64Encoded.Value.IsNullOrEmptyOrWhiteSpace()) throw new ArgumentNullException(nameof(base64Encoded));
-            var plainTextBytes = Convert.FromBase64String(base64Encoded);
+            if (base64Encoded == null || base64Encoded.Value.IsNullOrWhiteSpace()) return null;
+
+            var plainTextBytes = Convert.FromBase64String(base64Encoded!);
             return Encoding.UTF8.GetString(plainTextBytes);
         }
 
-        public static implicit operator Base64Decoded(string value)
+        public static implicit operator Base64Decoded?(string value)
         {
             return string.IsNullOrWhiteSpace(value) ? null : new Base64Decoded(value);
         }
 
-        public static implicit operator Base64Decoded(Base64Encoded value)
+        public static implicit operator Base64Decoded?(Base64Encoded? value)
         {
             return value == null ? null : new Base64Decoded(value);
         }
 
-        public static implicit operator string(Base64Decoded value)
+        public static implicit operator string?(Base64Decoded value)
         {
             return value?.Value;
         }

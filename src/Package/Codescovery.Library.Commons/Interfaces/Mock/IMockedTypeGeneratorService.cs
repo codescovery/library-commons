@@ -4,7 +4,7 @@ namespace Codescovery.Library.Commons.Interfaces.Mock
 {
     public interface IMockedTypeGeneratorService
     {
-        object CreateMockedObject(Type type);
+        object? CreateMockedObject(Type? type);
 
     }
     //public class Mocked<T> : T

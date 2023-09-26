@@ -11,10 +11,11 @@ namespace Codescovery.Library.Commons.Extensions
             return (int?)value;
         }
 
-        public static int ToInt(this Enum enumValue, int defaultValue = default)
+        public static int? ToInt(this Enum enumValue, int? defaultValue = default)
         {
             var result = enumValue.ToNullableInt(defaultValue);
-            return result.IsNullOrDefault() ? defaultValue : result.Value;
+            if (result != null) return result.IsNullOrDefault() ? defaultValue : result.Value;
+            return defaultValue;
         }
         public static int? ToNullableInt(this Enum enumValue, int? defaultValue = null)
         {

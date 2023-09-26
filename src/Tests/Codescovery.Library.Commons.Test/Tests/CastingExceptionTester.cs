@@ -33,7 +33,7 @@ namespace Codescovery.Library.Commons.Test.Tests
         [TestMethod]
         [DataRow(typeof(int), typeof(double), "Some AditionalMessage 1")]
         [DataRow(typeof(string), typeof(int), "Some AditionalMessage 2")]
-        public void WithAditionalMessageAndWithoutStackTrace(MemberInfo fromType, MemberInfo toType, string aditionalMessage)
+        public void WithAditionalMessageAndWithoutStackTrace(MemberInfo fromType, MemberInfo toType, string? aditionalMessage)
         {
             var expectedMessageResult = new StringBuilder()
                 .AppendLine($"Error while casting {fromType.Name} to Type {toType.Name}")

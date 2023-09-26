@@ -18,7 +18,7 @@ namespace Codescovery.Library.Commons.Services
         public T Set(TMember value)
         {
             var memberInfo = GetMemberInfo(_field);
-            SetMemberValue(memberInfo, _source, value);
+            if (value != null) SetMemberValue(memberInfo, _source, value);
             return _source;
         }
 

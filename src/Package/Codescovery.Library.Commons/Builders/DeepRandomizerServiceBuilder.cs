@@ -9,11 +9,11 @@ namespace Codescovery.Library.Commons.Builders
 {
     public class DeepRandomizerServiceBuilder
     {
-        public static IDeepRandomizerService BuildDefault(Random random = null,
-            IMockedTypeGeneratorService mockedTypeGeneratorService = null,
-            IRandomizerService randomizerService = null,
-            IPrimaryRandomizerService primaryRandomizerService = null,
-            RandomStringOptions randomStringOptions = null)
+        public static IDeepRandomizerService BuildDefault(Random? random = null,
+            IMockedTypeGeneratorService? mockedTypeGeneratorService = null,
+            IRandomizerService? randomizerService = null,
+            IPrimaryRandomizerService? primaryRandomizerService = null,
+            RandomStringOptions? randomStringOptions = null)
         => new DeepRandomizerService(random, mockedTypeGeneratorService, randomizerService, primaryRandomizerService, randomStringOptions);
     }
 }

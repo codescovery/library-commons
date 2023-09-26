@@ -23,11 +23,11 @@ namespace Codescovery.Library.Commons.Services
 
 
 
-        public DeepRandomizerService(Random random = null,
-            IMockedTypeGeneratorService mockedTypeGeneratorService = null,
-            IRandomizerService randomizerService = null,
-            IPrimaryRandomizerService primaryRandomizerService = null,
-            RandomStringOptions randomStringOptions = null
+        public DeepRandomizerService(Random? random = null,
+            IMockedTypeGeneratorService? mockedTypeGeneratorService = null,
+            IRandomizerService? randomizerService = null,
+            IPrimaryRandomizerService? primaryRandomizerService = null,
+            RandomStringOptions? randomStringOptions = null
             )
         {
 
@@ -39,7 +39,7 @@ namespace Codescovery.Library.Commons.Services
             _randomizerService = randomizerService ?? RandomizerServiceBuilder.BuildDefault(_random, _primaryRandomizerService);
         }
 
-        public object Randomize(Type type, int maxDepth = 1)
+        public object? Randomize(Type type, int maxDepth = 1)
         {
             var method = typeof(IDeepRandomizerService).GetMethods()
                 .Where(m => m.Name == nameof(IDeepRandomizerService.Randomize))
@@ -51,20 +51,20 @@ namespace Codescovery.Library.Commons.Services
             var result = genericMethod.Invoke(this, new object[] { maxDepth });
             return result;
         }
-        public T Randomize<T>(int maxDepth = 1)
+        public T? Randomize<T>(int maxDepth = 1)
         {
             var type = typeof(T);
 
             if (type.IsPrimitiveType())
-                return (T)RandomizeType(type);
-            if (maxDepth <= 0) return default(T);
+                return (T)RandomizeType(type)!;
+            if (maxDepth <= 0) return default;
 
             if (type.IsArray)
                 return HandleArray<T>(type);
 
 
             if (type.IsGenericType)
-                if (HandleGenericType(type, out T resultList, maxDepth)) return resultList;
+                if (HandleGenericType(type, out T? resultList, maxDepth)) return resultList;
 
 
             var obj = Activator.CreateInstance<T>();
@@ -78,9 +78,9 @@ namespace Codescovery.Library.Commons.Services
         }
 
 
-        public T HandleArray<T>(Type type, int maxDepth = 1)
+        public T HandleArray<T>(Type? type, int maxDepth = 1)
         {
-            var elementType = type.GetElementType();
+            var elementType = type?.GetElementType();
             var array = Array.CreateInstance(elementType ?? throw new NullReferenceException(nameof(type)), _random.Next(1, maxDepth));
             for (var i = 0; i < array.Length; i++)
                 array.SetValue(RandomizeType(elementType, maxDepth), i);
@@ -89,19 +89,21 @@ namespace Codescovery.Library.Commons.Services
             return (T)(object)array;
         }
 
-        public bool HandleGenericType<T>(Type type, out T resultList, int maxDepth = 1)
+        public bool HandleGenericType<T>(Type? type, out T? resultList, int maxDepth = 1)
         {
             resultList = default;
-            var genericTypeDefinition = type.GetGenericTypeDefinition();
+            var genericTypeDefinition = type?.GetGenericTypeDefinition();
             if (genericTypeDefinition != typeof(List<>)) return false;
-            var elementType = type.GetGenericArguments()[0];
-            var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+            var elementType = type?.GetGenericArguments()[0];
+            if (elementType == null) return true;
+            var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType))!;
             if (maxDepth > 0)
                 for (var i = 1; i < maxDepth; i++)
                     list.Add(Randomize(elementType, maxDepth));
 
 
             resultList = (T)list;
+
             return true;
 
         }
@@ -109,21 +111,22 @@ namespace Codescovery.Library.Commons.Services
         public void AddValuesToEnumerable<T>(T obj, int maxDepth = 1)
         {
             var count = _random.Next(1, 4);
-            var addMethod = obj.GetType().GetMethod("Add");
+            var addMethod = obj?.GetType().GetMethod("Add");
             for (var i = 0; i < count; i++) HandleAdd(obj, addMethod, maxDepth);
         }
 
-        public void HandleAdd<T>(T obj, MethodInfo addMethod, int maxDepth = 1)
+        public void HandleAdd<T>(T obj, MethodInfo? addMethod=null, int maxDepth = 1)
         {
             if (addMethod == null) return;
-            addMethod.Invoke(obj, new[] { RandomizeType(obj.GetType().GetGenericArguments()[0], maxDepth) });
+            addMethod.Invoke(obj, new[] { RandomizeType(obj?.GetType().GetGenericArguments()[0], maxDepth) });
         }
 
 
 
-        public void PropertySetter(Type type, object obj, int maxDepth = 1)
+        public void PropertySetter(Type? type, object? obj, int maxDepth = 1)
         {
-            var properties = type.GetProperties();
+            var properties = type?.GetProperties();
+            if (properties == null) return;
             foreach (var property in properties)
             {
                 if (!property.CanWrite)
@@ -134,11 +137,11 @@ namespace Codescovery.Library.Commons.Services
             }
         }
 
-        public object RandomizeType(Type type, int maxDepth = 1)
+        public object? RandomizeType(Type? type, int maxDepth = 1)
         {
-            if (!type.IsInterface) return _randomizerService.RandomizeValueType(type, _random, _randomStringOptions);
+            if (type is { IsInterface: false }) return _randomizerService.RandomizeValueType(type, _random, _randomStringOptions);
             var mocked = _mockedTypeGeneratorService.CreateMockedObject(type);
-            PropertySetter(mocked.GetType(), mocked, maxDepth);
+            PropertySetter(mocked?.GetType(), mocked, maxDepth);
             return mocked;
         }
 

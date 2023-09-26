@@ -5,7 +5,7 @@ namespace Codescovery.Library.Commons.Interfaces.Random
 {
     public interface IRandomizerService:IRandomService
     {
-        object RandomizeValueType(Type type, System.Random randomInstance = null,
-            RandomStringOptions randomStringOptions = null);
+        object? RandomizeValueType(Type? type, System.Random? randomInstance = null,
+            RandomStringOptions? randomStringOptions = null);
     }
 }

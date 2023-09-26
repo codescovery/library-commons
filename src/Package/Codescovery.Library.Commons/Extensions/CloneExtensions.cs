@@ -7,7 +7,7 @@ namespace Codescovery.Library.Commons.Extensions
     {
         public const BindingFlags DefaultBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.
             Instance;
-        public static T DeepClone<T>(this T source, BindingFlags bindingFlags = DefaultBindingFlags)
+        public static T? DeepClone<T>(this T? source, BindingFlags bindingFlags = DefaultBindingFlags)
          where T : new()
         {
             if (source == null || source.Equals(default(T)))
@@ -22,7 +22,7 @@ namespace Codescovery.Library.Commons.Extensions
 
             return result;
         }
-        public static void DeepClone<T>(this T source,T to, BindingFlags bindingFlags = DefaultBindingFlags)
+        public static void DeepClone<T>(this T? source,T? to, BindingFlags bindingFlags = DefaultBindingFlags)
             where T : class
         {
             if (source == null || source.Equals(default(T)))
@@ -41,7 +41,7 @@ namespace Codescovery.Library.Commons.Extensions
             foreach (var field in type.GetFields(bindingFlags))
                 field.SetValue(result, field.GetValue(source));
         }
-        public static void Clone<T>(this T source, BindingFlags bindingFlags, Type type, T result) where T : class
+        public static void Clone<T>(this T source, BindingFlags bindingFlags, Type type, T result) where T : class?
         {
             foreach (var field in type.GetFields(bindingFlags))
                 field.SetValue(result, field.GetValue(source));

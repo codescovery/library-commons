@@ -24,7 +24,7 @@ namespace Codescovery.Library.Commons.Extensions
                 var parsedObject = (T) sourceObject;
                 return parsedObject;
             }
-            catch (Exception ex)
+            catch (Exception? ex)
             {
                 if (throwExceptionOnError)
                     throw new CastingException(sourceObject.GetType(), typeof(T), innerException: ex);
@@ -50,13 +50,13 @@ namespace Codescovery.Library.Commons.Extensions
             var mergedObjectJsonString = JsonHelper.Merge(JsonSerializer.Serialize(resultObject), JsonSerializer.Serialize(newValue));
             return JsonSerializer.Deserialize<T>(mergedObjectJsonString);
         }
-        public static void FillWith<T>(this T obj, T source) where T : class
+        public static void FillWith<T>(this T? obj, T source) where T : class
         {
             source.DeepClone(obj);
         }
-        public static IFluentPropertySelectorService<T> DeepCloneWith<T>(this T obj) where T : new()
+        public static IFluentPropertySelectorService<T?> DeepCloneWith<T>(this T obj) where T : new()
         {
-            return new FluentPropertySelectorService<T>(obj.DeepClone());
+            return new FluentPropertySelectorService<T?>(obj.DeepClone());
         }
     }
 }

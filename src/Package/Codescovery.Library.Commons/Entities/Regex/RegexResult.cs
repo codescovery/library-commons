@@ -6,9 +6,9 @@ namespace Codescovery.Library.Commons.Entities.Regex
     public class RegexResult:RegexValidationResult
     {
         [JsonPropertyName("regex")]
-        public System.Text.RegularExpressions.Regex Regex { get; }
+        public System.Text.RegularExpressions.Regex? Regex { get; }
 
-        public RegexResult(bool isValid=true, System.Text.RegularExpressions.Regex regex=null) :base(isValid)
+        public RegexResult(bool isValid=true, System.Text.RegularExpressions.Regex? regex=null) :base(isValid)
         {
             IsValid = isValid;
             if(!IsValid) return;

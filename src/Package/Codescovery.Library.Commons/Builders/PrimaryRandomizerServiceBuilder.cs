@@ -6,7 +6,7 @@ namespace Codescovery.Library.Commons.Builders
 {
     public class PrimaryRandomizerServiceBuilder
     {
-        public static readonly Random DefaultRandomInstance = new Random();
-        public static IPrimaryRandomizerService BuildDefault(Random random = null) => new PrimaryRandomizerService(random ?? DefaultRandomInstance);
+        public static readonly Random DefaultRandomInstance = new();
+        public static IPrimaryRandomizerService BuildDefault(Random? random = null) => new PrimaryRandomizerService(random ?? DefaultRandomInstance);
     }
 }

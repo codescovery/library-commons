@@ -7,10 +7,11 @@ namespace Codescovery.Library.Commons.Extensions
     public static class ExceptionsExtensions
     {
 
-        public static string GetFullMessage(this Exception exception, string defaultMessage, string aditionalInfo = null, bool includeStackTrace = true)
+        public static string GetFullMessage(this Exception exception, string? defaultMessage, string? aditionalInfo = null, bool includeStackTrace = true)
         {
             var messageBuilder = new StringBuilder();
             messageBuilder.AppendLine(defaultMessage);
+
             messageBuilder.AppendAditionalInfoIfExists(aditionalInfo);
 
             if (includeStackTrace)
@@ -26,7 +27,7 @@ namespace Codescovery.Library.Commons.Extensions
             return messageBuilder.ToString();
         }
 
-        public static string GetFullMessage(this Exception exception, string defaultMessage, bool includeStackTrace = true)
+        public static string GetFullMessage(this Exception exception, string? defaultMessage, bool includeStackTrace = true)
         {
             return exception.GetFullMessage(defaultMessage, aditionalInfo: null, includeStackTrace: includeStackTrace);
         }
@@ -40,7 +41,7 @@ namespace Codescovery.Library.Commons.Extensions
             messageBuilder.AppendLine(ExceptionMessageHelper.MessageHeaderText);
             messageBuilder.AppendLine(defaultMessage);
         }
-        private static void AppendAditionalInfoIfExists(this StringBuilder messageBuilder, string aditionalInfo = null)
+        private static void AppendAditionalInfoIfExists(this StringBuilder messageBuilder, string? aditionalInfo = null)
         {
             if (aditionalInfo.IsNullOrEmptyOrWhiteSpace()) return;
             messageBuilder.AppendLine(ExceptionMessageHelper.AditionalInfoHeaderText);

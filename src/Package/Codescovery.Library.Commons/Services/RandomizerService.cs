@@ -8,14 +8,14 @@ namespace Codescovery.Library.Commons.Services
     {
         private readonly IPrimaryRandomizerService _primaryRandomizerService;
         public Random Random { get; }
-        public RandomizerService(Random random = null, IPrimaryRandomizerService primaryRandomizerService = null)
+        public RandomizerService(Random? random = null, IPrimaryRandomizerService? primaryRandomizerService = null)
         {
             Random = random ?? new Random();
             _primaryRandomizerService = primaryRandomizerService ?? new PrimaryRandomizerService(Random);
         }
 
         
-        public  object RandomizeValueType(Type type, Random randomInstance = null, RandomStringOptions randomStringOptions = null)
+        public  object? RandomizeValueType(Type? type, Random? randomInstance = null, RandomStringOptions? randomStringOptions = null)
         {
             var random = randomInstance ?? new Random();
 
@@ -63,10 +63,7 @@ namespace Codescovery.Library.Commons.Services
             if (type == typeof(Guid?))
                 return _primaryRandomizerService.GetRandomNullableGuidOrEmptyGuid(random);
 
-            if (type.IsEnum)
-                return _primaryRandomizerService.GetRandomNullableEnum(type,random);
-
-            return null;
+            return type is { IsEnum: true } ? _primaryRandomizerService.GetRandomNullableEnum(type,random) : null;
         }
 
     }
