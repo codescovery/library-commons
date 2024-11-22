@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Get Build Version
       if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
       run: |
@@ -63,7 +63,7 @@ jobs:
       
     - name: Create Release Tag
       if: startsWith(github.ref, 'refs/heads/release') ||  startsWith(github.ref, 'refs/heads/hotfix') 
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       env:
             RELEASE_VERSION_PREFIX: 'v'
       with:
@@ -98,7 +98,7 @@ jobs:
 
     - name: Create Latest Tag
       if: startsWith(github.ref, 'refs/heads/development')
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       env:
         LATEST_TAG_NAME: 'latest' 
       with:

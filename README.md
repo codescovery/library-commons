@@ -1,6 +1,6 @@
 # library-commons
 
-.Net 7 package that provides some common:
+.Net 9 package that provides some common:
 
 - [Extensions](#Extensions)
 - Services 
