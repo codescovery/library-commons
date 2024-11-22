@@ -157,3 +157,23 @@ jobs:
               }
               
               await createLatestTag();
+    - name: Delete Branch
+      if: startsWith(github.ref, 'refs/heads/release') || startsWith(github.ref, 'refs/heads/hotfix')
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          console.log(`Deleting branch: ${context.ref}`);
+          const branch = context.ref.replace('refs/heads/', '');
+          try {
+              await github.rest.git.deleteRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `heads/${branch}`,
+              });
+              console.log(`Branch ${branch} deleted successfully.`);
+          } catch (e) {
+              const errorMessage = `Error while deleting branch ${branch}. Error: ${e}`;
+              console.error(errorMessage);
+              core.setFailed(errorMessage);
+          }
