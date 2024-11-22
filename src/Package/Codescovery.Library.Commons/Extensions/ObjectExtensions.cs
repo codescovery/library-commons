@@ -50,7 +50,7 @@ namespace Codescovery.Library.Commons.Extensions
             var mergedObjectJsonString = JsonHelper.Merge(JsonSerializer.Serialize(resultObject), JsonSerializer.Serialize(newValue));
             return JsonSerializer.Deserialize<T>(mergedObjectJsonString);
         }
-        public static void FillWith<T>(this T? obj, T source) where T : class
+        public static void FillWith<T>(this T? obj, T source) where T : class?
         {
             source.DeepClone(obj);
         }

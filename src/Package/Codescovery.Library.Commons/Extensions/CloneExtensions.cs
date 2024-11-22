@@ -23,7 +23,7 @@ namespace Codescovery.Library.Commons.Extensions
             return result;
         }
         public static void DeepClone<T>(this T? source,T? to, BindingFlags bindingFlags = DefaultBindingFlags)
-            where T : class
+            where T : class?
         {
             if (source == null || source.Equals(default(T)))
                 return;

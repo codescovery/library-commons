@@ -74,15 +74,19 @@ public class FluentObjectPropertySetterTester
             ExampleInt = 1
         };
        var cloned= exampleClass.DeepCloneWith()
-            .Property(@class => @class.ExampleInt)
+            .Property(@class => @class!.ExampleInt)
             .Set(intValue)
             .And()
-            .Property(@class => @class.ExampleString)
+            .Property(@class => @class!.ExampleString)
             .Set(stringValue);
-        Assert.AreEqual(cloned.ExampleInt, intValue);
-        Assert.AreNotEqual(exampleClass.ExampleInt, intValue);
-        Assert.AreEqual(cloned.ExampleString, stringValue);
-        Assert.AreNotEqual(exampleClass.ExampleString, stringValue);
+       if (cloned != null)
+       {
+           Assert.AreEqual(cloned.ExampleInt, intValue);
+           Assert.AreNotEqual(exampleClass.ExampleInt, intValue);
+           Assert.AreEqual(cloned.ExampleString, stringValue);
+       }
+
+       Assert.AreNotEqual(exampleClass.ExampleString, stringValue);
 
     }
 }

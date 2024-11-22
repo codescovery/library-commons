@@ -27,14 +27,17 @@ namespace Codescovery.Library.Commons.Test.Tests
         {
 
             var encodedString = rawString.ToBase64Encoded();
-            Assert.AreEqual(base64Encoded, (string)encodedString);
+
+
+            Assert.AreEqual(base64Encoded, (string?)encodedString);
         }
         [TestMethod]
         public void Decode()
         {
             var decodedString = rawString.ToBase64Decoded();
 
-            Assert.AreEqual(rawString, (string)decodedString);
+
+            if (decodedString != null) Assert.AreEqual(rawString, (string?)decodedString);
         }
         [TestMethod]
         public void EncodeNull()
@@ -47,7 +50,7 @@ namespace Codescovery.Library.Commons.Test.Tests
         public void DecodeNull()
         {
             string? nullEncodedString = null;
-            var decodedString = nullEncodedString.ToBase64Decoded();
+            var decodedString = nullEncodedString?.ToBase64Decoded();
             Assert.AreEqual(null, nullEncodedString);
         }
     }

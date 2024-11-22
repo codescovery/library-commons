@@ -14,6 +14,7 @@ namespace Codescovery.Library.Commons.Helpers
         public static readonly FolderPath DefaultBasePath = Directory.GetCurrentDirectory()!;
         public static FolderPath GetCurrentDirectoryBasePath(FolderPath? basePath =null, params string[]? paths)
         {
+            if (basePath == null) return DefaultBasePath;
             var pathsList = paths ?? new string[] { };
             var persistedPaths = pathsList.Prepend(GetBasePath(basePath).Value);
             return Path.Combine(persistedPaths.ToArray()!)!;
